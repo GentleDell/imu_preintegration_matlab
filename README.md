@@ -4,3 +4,4 @@ I am amazed at the optimization based method for sensor fusion. So I do a tiny t
 
 The matlab codes here can also differentiate a sequence of SE3 poses into IMU data using interpolation from the referrence: [Spline Fusion: A continuous-time representation for visual-inertial fusion with application to rolling shutter cameras](https://arpg.colorado.edu/wp-content/uploads/Spline-fusion.pdf).
 
+# imu_preintegration_matlab
