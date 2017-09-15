@@ -1,12 +1,10 @@
 classdef AttitudeBase
-    %Õâ¸öÀà·â×°ÁË»ù±¾µÄ×ËÌ¬±ä»¯¹ØÏµº¯Êý
+    %ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×°ï¿½Ë»ï¿½ï¿½ï¿½ï¿½Ì¬ï¿½ä»¯ï¿½ï¿½Ïµï¿½ï¿½ï¿½ï¿½
     
     methods(Static = true)
         %%
-        
-        function cnb = a2cnb(atti)
-            %ÊäÈë£º×ËÌ¬½Ç(pitch, roll, yaw)
-            %Êä³ö£ºµ¼º½Ïµµ½ÌåÏµµÄ×ËÌ¬±ä»»¾ØÕó(navigation frame to body frame)
+        % Problem?
+        function cnb = a2cnb(atti)  % 3D rotation matrix
             sp = sin(atti(1));cp = cos(atti(1));    %pitch
             sr = sin(atti(2));cr = cos(atti(2));    %roll
             sy = sin(atti(3));cy = cos(atti(3));    %yaw
@@ -24,7 +22,7 @@ classdef AttitudeBase
         %%
         
         function a = cnb2atti(cnb )
-            %a2cnb()µÄ·´º¯Êý
+            %a2cnb()ï¿½Ä·ï¿½ï¿½ï¿½ï¿½ï¿½
             gama = atan(-cnb(1,3)/cnb(3,3));
             theta = asin(cnb(2,3));
             ctheta = cos(theta);
@@ -38,8 +36,8 @@ classdef AttitudeBase
         %%
         
         function cnb = quat2cnb( quat )
-            %ÊäÈë£º×ËÌ¬ËÄÔªÊý
-            %Êä³ö£ºµ¼º½Ïµµ½ÌåÏµµÄ×ËÌ¬±ä»»¾ØÕó(navigation frame to body frame)
+            %ï¿½ï¿½ï¿½ë£ºï¿½ï¿½Ì¬ï¿½ï¿½Ôªï¿½ï¿½
+            %ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ïµï¿½ï¿½ï¿½ï¿½Ïµï¿½ï¿½ï¿½ï¿½Ì¬ï¿½ä»»ï¿½ï¿½ï¿½ï¿½(navigation frame to body frame)
             cnb(1,1) = quat(1)*quat(1) + quat(2)*quat(2) - quat(3)*quat(3) - quat(4)*quat(4);
             cnb(1,2) = 2*(quat(2)*quat(3)+quat(1)*quat(4));
             cnb(1,3) = 2*(quat(2)*quat(4)-quat(1)*quat(3));
@@ -53,8 +51,8 @@ classdef AttitudeBase
         %%
         
         function A = w2Datti( atti )
-            %ÊäÈë£º×ËÌ¬½Ç
-            %Êä³ö£º×ËÌ¬½ÇËÙÂÊÓë½ÇËÙ¶ÈµÄ¹ØÏµ¾ØÕó
+            %ï¿½ï¿½ï¿½ë£ºï¿½ï¿½Ì¬ï¿½ï¿½
+            %ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ù¶ÈµÄ¹ï¿½Ïµï¿½ï¿½ï¿½ï¿½
             % A = [-sin(atti(2)), 0, cos(atti(2));
             %     cos(atti(2))*cos(atti(1)),0,sin(atti(2))*cos(atti(1));
             %     sin(atti(1))*sin(atti(2)), cos(atti(1)), -sin(atti(1))*cos(atti(2))]/cos(atti(1));
@@ -65,10 +63,8 @@ classdef AttitudeBase
                 -sr, 0, cr]/cp;
         end
         %%
-        
+        % Problems?
         function T = Datti2w(atti)
-            %ÊäÈë£º×ËÌ¬½Ç
-            %Êä³ö£º½ÇËÙ¶ÈÓë×ËÌ¬½ÇËÙÂÊµÄ¹ØÏµ¾ØÕó
             sp = sin(atti(1));cp = cos(atti(1));
             sr = sin(atti(2));cr = cos(atti(2));
             T = [cr, 0 -sr*cp;
@@ -79,8 +75,8 @@ classdef AttitudeBase
         %%
         
         function deltheta = w2omega( w )
-            %ÊäÈë£º½ÇËÙ¶ÈµÄ±ä»¯Á¿
-            %Êä³ö£ºËÄÔªÊý±ä»¯ÂÊÓëËÄÔªÊýµÄ¹ØÏµ¾ØÕó
+            %ï¿½ï¿½ï¿½ë£ºï¿½ï¿½ï¿½Ù¶ÈµÄ±ä»¯ï¿½ï¿½
+            %ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ôªï¿½ï¿½ä»¯ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ôªï¿½ï¿½Ä¹ï¿½Ïµï¿½ï¿½ï¿½ï¿½
             delthetax = w(1);
             delthetay = w(2);
             delthetaz = w(3);

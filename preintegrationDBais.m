@@ -1,4 +1,4 @@
-
+% ba_ is constant in this code 
 
 clear;clc;
 % global attiCaculator;
@@ -23,7 +23,7 @@ acc_pure = zeros(N,3);
 a = wgn(N,1,1)/5;
 b = zeros(N,1);
 b(1) = a(1)*step;
-%Éú³ÉÎŞÔëÉùµÄimuÊı¾İ
+%ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½imuï¿½ï¿½ï¿½
 for iter = 1:N
     A = AttitudeBase.Datti2w(atti(iter,:));
     gyro_pure(iter,:) = Datti(iter,:)*A';
@@ -33,7 +33,6 @@ end
 % state0 = zeros(10,1);
 % state0(7) = 1;
 
-%¼ÓËÙ¶È¼ÆºÍÍÓÂİÒÇ¼ÓÔëÉù
 acc_noise = acc_pure + 0.1*randn(N,3) + 0.5*ones(N,3);
 gyro_noise = gyro_pure + (randn(N,3)*2 + ones(N,3))/180*pi;
 
@@ -42,7 +41,7 @@ gyroCov = (2/180*pi)^2*ones(3);
 
 imuPara = IMUPara(accCov,gyroCov,ones(3),ones(3));
 
-PIM = PreintegrateMeasurement();
+PIM = PreintegrateMeasurement();    % initial data
 for i = 1:100
     PIM = PIM.Preintegrate(acc_noise(i,:)',gyro_noise(i,:)',imuPara,step);
 end

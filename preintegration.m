@@ -8,11 +8,11 @@ end_time = 50;
 tspan = [start_time:step:end_time]';
 N = length(tspan);
 Ar = 10;
-r = [Ar*sin(tspan) Ar*cos(tspan) 0.5*tspan.*tspan];
+r = [Ar*sin(tspan) Ar*cos(tspan) 0.5*tspan.*tspan]; % pose of GPS â€”â€” global pose
 v = [Ar*cos(tspan) -Ar*sin(tspan) tspan];
-acc_inertial = [-Ar*sin(tspan) -Ar*cos(tspan) ones(N,1)];
+acc_inertial = [-Ar*sin(tspan) -Ar*cos(tspan) ones(N,1)];  % global acceleration
 
-atti = [0.1*sin(tspan) 0.1*sin(tspan) 0.1*sin(tspan)];
+atti = [0.1*sin(tspan) 0.1*sin(tspan) 0.1*sin(tspan)];  % Rotation: pitch roll yaw || x y z
 Datti = [0.1*cos(tspan) 0.1*cos(tspan) 0.1*cos(tspan)];
 g = [0 0 -9.8]';
 gyro_pure = zeros(N,3);
@@ -21,7 +21,7 @@ acc_pure = zeros(N,3);
 a = wgn(N,1,1)/5;
 b = zeros(N,1);
 b(1) = a(1)*step;
-%Éú³ÉÎÞÔëÉùµÄimuÊý¾Ý
+% generate imu data
 for iter = 1:N
     A = AttitudeBase.Datti2w(atti(iter,:));
     gyro_pure(iter,:) = Datti(iter,:)*A';
@@ -31,24 +31,23 @@ end
 % state0 = zeros(10,1);
 % state0(7) = 1;
 
-%¼ÓËÙ¶È¼ÆºÍÍÓÂÝÒÇ¼ÓÔëÉù
-acc_noise = acc_pure + 0.1*randn(N,3) + 0.5*ones(N,3);
-gyro_noise = gyro_pure + (randn(N,3)*2 + ones(N,3))/180*pi;
-
+% add noise and bias (0.5 m/s^2 & 1 degree)
+acc_noised = acc_pure + 0.1*randn(N,3) + 0.5*ones(N,3);
+gyro_noised = gyro_pure + (randn(N,3)*2 + ones(N,3))/180*pi;
 accCov = 0.01*ones(3);
 gyroCov = (2/180*pi)^2*ones(3);
 
-imuPara = IMUPara(accCov,gyroCov,ones(3),ones(3));
+imuPara = IMUPara(accCov,gyroCov,ones(3),ones(3));  % initial imuPara with ones?
 
 PIM = PreintegrateMeasurement();
-for i = 1:100
-    PIM = PIM.Preintegrate(acc_noise(i,:)',gyro_noise(i,:)',imuPara,step);
+for i = 1:100   % the former 100 imu data
+    PIM = PIM.Preintegrate(acc_noised(i,:)',gyro_noised(i,:)',imuPara,step);
 end
 
-si =  NavState(zeros(3,1),r(1,:)',v(1,:)',zeros(3,1),zeros(3,1));
-sj = si.predict(PIM);
-% sj = si;
+si =  NavState(zeros(3,1),r(1,:)',v(1,:)',zeros(3,1),zeros(3,1));   % initial the NavState
+sj = si.predict(PIM);   % update the NavState by imu preintegraion
 
+% sj = si;
 % cov = zeros(15,15);
 % cov(1:9,1:9) = PIM.cov_;
 % cov(10:15,10:15) = 0.1*eye(6);

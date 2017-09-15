@@ -33,8 +33,9 @@ classdef NavState
         function pj = predict(o,PIM)
            g = [0;0;-9.8];
            t22 = PIM.t_*PIM.t_/2;
+           % formula (31) of the paper
            R =  o.R_*PIM.R_;
-           v = o.R_*PIM.v_+o.v_ + g*PIM.t_;
+           v = o.R_*PIM.v_+o.v_ + g*PIM.t_; 
            p = o.p_ + o.v_*PIM.t_ + g*t22 + o.R_*PIM.p_;
            pj = NavState(SO3.log(R),p,v,o.bg_,o.ba_);
            
