@@ -17,6 +17,7 @@ classdef PreintegrateMeasurement
     end
     
     methods
+        %% constructor
         function o = PreintegrateMeasurement()
             o.R_ = eye(3);
             o.p_ = zeros(3,1);
@@ -33,6 +34,7 @@ classdef PreintegrateMeasurement
             o.Dp_ba_ = o.DR_bg_;
         end
         
+        %% preintegration
         function o = Preintegrate(o,acc,gyro,imuPara,t)
             o.t_ = o.t_ + t;
             I3 = eye(3);

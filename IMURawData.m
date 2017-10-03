@@ -38,7 +38,6 @@ classdef IMURawData
             
             k = 1;
             for i = 1:N-4
-                
                 if i == 1
 %                     T_i = [eye(3) zeros(3,1)];
                     T_i = groundtruth(:,:,i);
@@ -46,7 +45,7 @@ classdef IMURawData
                     T_i_2 = groundtruth(:,:,i+1);
                     T_i_3 = groundtruth(:,:,i+2);
                     
-                    omega_i = SE3.log(SE3.multiply(SE3.inv(T_i),T_i_1));
+                    omega_i = SE3.log(SE3.multiply(SE3.inv(T_i),T_i_1));    % eps = log(Ti_inv * Ti+1)
                     omega_i_1 = SE3.log(SE3.multiply(SE3.inv(T_i_1),T_i_2));
                     omega_i_2 = SE3.log(SE3.multiply(SE3.inv(T_i_2),T_i_3));
                 else

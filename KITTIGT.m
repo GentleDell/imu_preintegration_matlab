@@ -2,8 +2,6 @@ classdef KITTIGT
     
     methods(Static = true)
         function position = LoadTrajactory( fileName )
-            %LOADTXT 此处显示有关此函数的摘要
-            %   此处显示详细说明
             aa = load(fileName);
             [rows cols] = size(aa);
             % pos = zeros(rows,3);
@@ -19,8 +17,8 @@ classdef KITTIGT
         
         function pose = LoadPose( fileName )
             aa = load(fileName);
-            [rows cols] = size(aa);
-            pose = zeros(3,4,rows);
+            [rows, cols] = size(aa);
+            pose = zeros(3,4,rows);     % [R t]
             
             for i = 1:rows
                 pose(1,:,i) = aa(i,1:4);

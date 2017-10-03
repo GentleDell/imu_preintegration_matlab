@@ -65,6 +65,8 @@ classdef SO3
             if(phi<1e-3)
                 JrInv = I3 + 0.5*phix;
             else
+                % error? according to last formula in supplementary
+                % material, it shuold be + rather than - ?
                 JrInv = I3 + 0.5*phix + (phiinv*phiinv-(1+cos(phi))*phiinv/(2*sin(phi)))*phix*phix;
             end
         end

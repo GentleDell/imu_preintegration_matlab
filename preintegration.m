@@ -21,22 +21,23 @@ acc_pure = zeros(N,3);
 a = wgn(N,1,1)/5;
 b = zeros(N,1);
 b(1) = a(1)*step;
-% generate imu data
+%% generate imu data
 for iter = 1:N
     A = AttitudeBase.Datti2w(atti(iter,:));
     gyro_pure(iter,:) = Datti(iter,:)*A';
     cnb = AttitudeBase.a2cnb(atti(iter,:));
     acc_pure(iter,:) = cnb*(acc_inertial(iter,:)' - g);
 end
-% state0 = zeros(10,1);
+% state0 = zeros(10,1);  
 % state0(7) = 1;
 
 % add noise and bias (0.5 m/s^2 & 1 degree)
 acc_noised = acc_pure + 0.1*randn(N,3) + 0.5*ones(N,3);
 gyro_noised = gyro_pure + (randn(N,3)*2 + ones(N,3))/180*pi;
-accCov = 0.01*ones(3);
-gyroCov = (2/180*pi)^2*ones(3);
+accCov = 0.01*eye(3);
+gyroCov = (2/180*pi)^2*eye(3);
 
+%% preintegration
 imuPara = IMUPara(accCov,gyroCov,ones(3),ones(3));  % initial imuPara with ones?
 
 PIM = PreintegrateMeasurement();
@@ -58,9 +59,9 @@ cov = zeros(12,12);
 cov(1:9,1:9) = PIM.cov_;
 cov(10:12,10:12) = 0.1*eye(3);
 infor = eye(12)/cov;
-for i = 1:10
+for i = 1:2
     %     [ err,J ] = IMUErrorJacobian.GPSAndOri( si,sj,PIM,r(100,:)',oriMeas );
-    [ err,J ] = IMUErrorJacobian.GPS( si,sj,PIM,r(100,:)' );
+    [ err,J ] = IMUErrorJacobian.GPS( si,sj,PIM,r(100,:)' );    %% get residual error & uncomplete Jaccobian
     fprintf('err: %f\n',norm(err));
     %     if norm(err)<0.00001
     %         break;

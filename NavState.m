@@ -9,6 +9,7 @@ classdef NavState
     end
     
     methods
+        %% save sys state
         function o = NavState(phiv,p,v,bg,ba)
             o.R_ = SO3.exp(phiv);
             o.phiv_ = phiv;
@@ -18,7 +19,7 @@ classdef NavState
             o.ba_ = ba;
         end
         
-              
+        %% use delta to update
         function o = update(o,delta)
            R = o.R_;
            o.R_ = o.R_*SO3.exp(delta(1:3));
@@ -30,11 +31,12 @@ classdef NavState
            o.bg_ = o.bg_ + delta(13:15);
         end
         
+        %% get new sys state
         function pj = predict(o,PIM)
            g = [0;0;-9.8];
            t22 = PIM.t_*PIM.t_/2;
-           % formula (31) of the paper
-           R =  o.R_*PIM.R_;
+           % transposition of formula (31) in the paper
+           R = o.R_*PIM.R_;
            v = o.R_*PIM.v_+o.v_ + g*PIM.t_; 
            p = o.p_ + o.v_*PIM.t_ + g*t22 + o.R_*PIM.p_;
            pj = NavState(SO3.log(R),p,v,o.bg_,o.ba_);
